@@ -11,8 +11,14 @@ use Tests\TestCase;
 
 uses(TestCase::class, RefreshDatabase::class);
 
-it('persists telemetry data into storage', function () {
-    $vehicle = Vehicle::create();
+it('persists telemetry data into storage', function () 
+{
+    $vehicle = Vehicle::create([
+            'license_plate' => 'AB12 CDE',
+            'make'          => 'Tesla',
+            'model'         => 'Model 3',
+            'status'        => 'active',
+        ]);
 
     $data = new TelemetryData(
         $vehicle->id,

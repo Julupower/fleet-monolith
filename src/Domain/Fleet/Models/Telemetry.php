@@ -11,5 +11,18 @@ final class Telemetry extends Model
 {
     use HasUuids;
 
+    protected $table = 'telemetries';
+
     protected $guarded = [];
+
+    /**
+     * Attribute type casting rules.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'latitude'  => 'float',
+        'longitude' => 'float',
+        'speed'     => 'integer',
+    ];
 }

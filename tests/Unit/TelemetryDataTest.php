@@ -14,7 +14,12 @@ uses(TestCase::class, RefreshDatabase::class);
 it('instantiates a telemetry DTO from validated request data', function () 
 {
     // 1. Create a real vehicle in the database so the 'exists' rule passes
-    $vehicle = Vehicle::create();
+    $vehicle = Vehicle::create([
+            'license_plate' => 'AB12 CDE',
+            'make'          => 'Tesla',
+            'model'         => 'Model 3',
+            'status'        => 'active',
+        ]);
 
     $payload = [
         'vehicle_id' => $vehicle->id,
