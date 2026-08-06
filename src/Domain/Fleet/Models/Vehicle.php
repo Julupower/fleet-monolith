@@ -8,24 +8,25 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Vehicle extends Model
+final class Vehicle extends Model
 {
     use HasUuids;
 
-    protected $table = 'vehicles';
-
-    protected $fillable = [
-        'license_plate',
-        'make',
-        'model',
-        'status',
-    ];
+    protected $guarded = [];
 
     /**
-     * Relationship: A vehicle has many telemetry logs.
+     * Relationship: Primary domain telemetry collection.
+     */
+    public function telemetries(): HasMany
+    {
+        return $this->hasMany(Telemetry::class);
+    }
+
+    /**
+     * Relationship: Legacy/Feature test telemetry collection.
      */
     public function telemetryRecords(): HasMany
     {
-        return $this->hasMany(TelemetryRecord::class, 'vehicle_id', 'id');
+        return $this->hasMany(Telemetry::class, 'vehicle_id', 'id');
     }
 }
