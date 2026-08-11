@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Validator;
-use Src\App\Fleet\Requests\StoreTelemetryRequest;
+use Src\App\Fleet\Http\Requests\StoreTelemetryRequest;
 use Src\Domain\Fleet\DataTransferObjects\TelemetryData;
+
 use Src\Domain\Fleet\Models\Vehicle;
 use Tests\TestCase;
 
