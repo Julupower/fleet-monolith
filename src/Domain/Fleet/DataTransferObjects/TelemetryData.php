@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Src\Domain\Fleet\DataTransferObjects;
 
-use Src\App\Fleet\Requests\StoreTelemetryRequest;
+use Src\App\Fleet\Http\Requests\StoreTelemetryRequest;
 
 final class TelemetryData
 {

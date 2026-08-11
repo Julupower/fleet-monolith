@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Illuminate\Support\Facades\Validator;
-use Src\App\Fleet\Requests\StoreTelemetryRequest;
+use Src\App\Fleet\Http\Requests\StoreTelemetryRequest;
 use Src\Domain\Fleet\Models\Vehicle;
 
 it('validates a valid telemetry payload successfully', function () {
