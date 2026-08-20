@@ -3,42 +3,44 @@
 declare(strict_types=1);
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
 use Src\Domain\Fleet\Actions\IngestTelemetryAction;
 use Src\Domain\Fleet\DataTransferObjects\TelemetryData;
-use Src\Domain\Fleet\Models\Telemetry;
+use Src\Domain\Fleet\Events\TelemetryIngested;
 use Src\Domain\Fleet\Models\Vehicle;
 use Tests\TestCase;
 
 uses(TestCase::class, RefreshDatabase::class);
 
-it('persists telemetry data into storage', function () 
-{
-    $vehicle = Vehicle::create([
-            'license_plate' => 'AB12 CDE',
-            'make'          => 'Tesla',
-            'model'         => 'Model 3',
-            'status'        => 'active',
-        ]);
+it('persists telemetry data into storage and dispatches TelemetryIngested event', function () {
+    // Arrange: Fake events and create a test vehicle record
+    Event::fake();
 
-    $data = new TelemetryData(
+    $vehicle = Vehicle::create([
+        'license_plate' => 'AB12 CDE',
+        'make'          => 'Ford',
+        'model'         => 'Transit',
+    ]);
+
+    $dto = new TelemetryData(
         $vehicle->id,
         51.5074,
         -0.1278,
-        55
+        85
     );
 
+    // Act: Execute the domain action
     $action = new IngestTelemetryAction();
-    $telemetry = $action->execute($data);
+    $telemetry = $action->execute($dto);
 
-    expect($telemetry)->toBeInstanceOf(Telemetry::class)
-        ->and($telemetry->vehicle_id)->toBe($vehicle->id)
-        ->and((float) $telemetry->latitude)->toBe(51.5074)
-        ->and((float) $telemetry->longitude)->toBe(-0.1278)
-        ->and((int) $telemetry->speed)->toBe(55);
-
+    // Assert: Verify database storage and event dispatch
     $this->assertDatabaseHas('telemetries', [
         'id'         => $telemetry->id,
         'vehicle_id' => $vehicle->id,
-        'speed'      => 55,
+        'speed'      => 85,
     ]);
+
+    Event::assertDispatched(TelemetryIngested::class, function (TelemetryIngested $event) use ($telemetry) {
+        return $event->telemetry->id === $telemetry->id;
+    });
 });

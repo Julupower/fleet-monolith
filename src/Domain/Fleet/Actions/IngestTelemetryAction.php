@@ -5,15 +5,22 @@ declare(strict_types=1);
 namespace Src\Domain\Fleet\Actions;
 
 use Src\Domain\Fleet\DataTransferObjects\TelemetryData;
+use Src\Domain\Fleet\Events\TelemetryIngested;
 use Src\Domain\Fleet\Models\Telemetry;
 
 final class IngestTelemetryAction
 {
-    /**
-     * Execute the business operation to persist telemetry data.
-     */
     public function execute(TelemetryData $data): Telemetry
     {
-        return Telemetry::create($data->toArray());
+        $telemetry = Telemetry::create([
+            'vehicle_id' => $data->vehicleId,
+            'latitude'   => $data->latitude,
+            'longitude'  => $data->longitude,
+            'speed'      => $data->speed,
+        ]);
+
+        TelemetryIngested::dispatch($telemetry);
+
+        return $telemetry;
     }
 }
