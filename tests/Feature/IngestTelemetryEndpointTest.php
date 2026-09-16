@@ -14,10 +14,10 @@ it('ingests telemetry data successfully via the HTTP endpoint', function () {
     ]);
 
     $payload = [
-        'vehicle_id' => $vehicle->id,
-        'latitude'   => 51.5074,
-        'longitude'  => -0.1278,
-        'speed'      => 65,
+	'vehicle_id' => $vehicleId,
+	'latitude'   => 51.5074,
+	'longitude'  => -0.1278,
+	'speed'      => 45.5,
     ];
 
     // Act: Send a POST request to the API endpoint
@@ -30,7 +30,7 @@ it('ingests telemetry data successfully via the HTTP endpoint', function () {
         ]);
 
     $this->assertDatabaseHas('telemetries', [
-        'vehicle_id' => $vehicle->id,
-        'speed'      => 65,
+	'vehicle_id' => $vehicleId,
+	'speed'      => 45.5,
     ]);
 });
